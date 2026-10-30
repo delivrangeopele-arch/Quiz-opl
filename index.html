@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiz Cerveau – culture générale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF0FF;--ink:#1B1A3A;--card:#fff;--mut:#625f8a;--sh:#1B1A3A;--c0:#5B3FD1;--c1:#EE4266;--c2:#0EAD9A;--c3:#F5A300;--ok:#12A150;--ko:#E03650;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17163A;--ink:#F1F0FF;--card:#262560;--mut:#aeabdc;--sh:#0A0920;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17163A;--ink:#F1F0FF;--card:#262560;--mut:#aeabdc;--sh:#0A0920;color-scheme:dark}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:500;line-height:1.4;min-height:100vh}
+#app{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--c3);outline-offset:3px}
+h1{font-size:clamp(44px,13vw,68px);line-height:.95;margin:8px 0 12px;font-weight:800;letter-spacing:-.03em}
+h1 span{display:inline-block;transform:rotate(-4deg);background:var(--c3);color:#1B1A3A;padding:0 .15em;border-radius:12px}
+.lead{font-size:18px;color:var(--mut);margin:0 0 22px;max-width:44ch}
+.cats{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 24px}
+.chip{border:3px solid var(--ink);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:700;box-shadow:0 3px 0 var(--sh)}
+.chip[aria-pressed="true"]{background:var(--c0);color:#fff}
+.big{display:block;width:100%;border:3px solid var(--ink);background:var(--c1);color:#fff;border-radius:18px;padding:16px;font-size:22px;font-weight:800;box-shadow:0 6px 0 var(--sh);transition:transform .08s,box-shadow .08s}
+.big:active{transform:translateY(4px);box-shadow:0 2px 0 var(--sh)}
+.best{margin-top:18px;color:var(--mut);font-weight:700}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800;font-size:17px}
+.top small{color:var(--mut);font-weight:700;font-size:14px}
+.bar{height:14px;border:3px solid var(--ink);border-radius:99px;background:var(--card);overflow:hidden;margin:12px 0 18px}
+.bar i{display:block;height:100%;width:100%;background:var(--c2)}
+.bar i.low{background:var(--c1)}
+.tag{display:inline-block;background:var(--card);border:3px solid var(--ink);border-radius:10px;padding:2px 10px;font-weight:700;font-size:14px;margin-bottom:10px}
+.q{font-size:clamp(22px,6vw,28px);line-height:1.2;font-weight:800;margin:0 0 20px;letter-spacing:-.01em}
+.ans{display:flex;flex-direction:column;gap:12px}
+.a{display:flex;align-items:center;gap:12px;text-align:left;width:100%;border:3px solid var(--ink);background:var(--card);border-radius:16px;padding:12px 14px;font-weight:700;font-size:18px;box-shadow:0 4px 0 var(--sh);transition:transform .08s,box-shadow .08s}
+.a:not(:disabled):active{transform:translateY(3px);box-shadow:0 1px 0 var(--sh)}
+.a b{flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;border:2px solid var(--ink)}
+.a:disabled{cursor:default}
+.a.right{background:var(--ok);color:#fff}
+.a.wrong{background:var(--ko);color:#fff}
+.a.dim{opacity:.55}
+.fb{margin-top:20px;background:var(--card);border:3px solid var(--ink);border-radius:18px;padding:14px 16px;box-shadow:0 4px 0 var(--sh)}
+.fb h3{margin:0 0 4px;font-size:22px;font-weight:800}
+.fb p{margin:6px 0 0}
+.fb .next{margin-top:14px;background:var(--c0)}
+.score{font-size:72px;font-weight:800;line-height:1;margin:6px 0}
+.rank{font-size:26px;font-weight:800;margin:0 0 4px}
+.stats{display:flex;gap:10px;margin:18px 0}
+.stats div{flex:1;background:var(--card);border:3px solid var(--ink);border-radius:14px;padding:10px;text-align:center;font-weight:800;font-size:22px}
+.stats small{display:block;font-size:13px;color:var(--mut);font-weight:700}
+.miss{background:var(--card);border:3px solid var(--ink);border-radius:16px;padding:6px 14px;margin:0 0 20px}
+.miss div{padding:10px 0;border-bottom:2px dashed var(--mut)}
+.miss div:last-child{border:0}
+.miss em{font-style:normal;color:var(--ok);font-weight:800}
+.ghost{background:var(--card);color:var(--ink);margin-top:12px;font-size:18px}
+.pop{position:fixed;pointer-events:none;font-size:26px;z-index:9}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+var CATS={all:["🎲","Un peu de tout"],geo:["🌍","Géographie"],his:["🏛️","Histoire"],sci:["🔬","Sciences"],ani:["🦒","Animaux"],art:["🎭","Arts & langues"],fun:["🎉","Fun & sport"]};
+// [catégorie, question, [choix], index bonne réponse, anecdote]
+var Q=[
+["geo","Quelle est la capitale de l’Australie ?",["Sydney","Melbourne","Canberra","Perth"],2,"Canberra a été créée de toutes pièces en 1913, pour éviter une dispute entre Sydney et Melbourne."],
+["geo","Quel grand fleuve traverse Kinshasa ?",["Le Nil","Le Congo","Le Niger","Le Zambèze"],1,"Le Congo est le fleuve le plus profond du monde : plus de 200 mètres par endroits. Kinshasa et Brazzaville se font face de part et d’autre."],
+["geo","Quel est le plus petit pays du monde ?",["Monaco","Saint-Marin","Le Liechtenstein","Le Vatican"],3,"Le Vatican fait environ 0,44 km², soit à peu près 60 terrains de football."],
+["geo","Combien de pays compte l’Afrique ?",["48","51","54","62"],2,"L’Afrique compte 54 pays reconnus par l’ONU : c’est le continent qui en a le plus après l’Asie… à égalité de poids avec elle dans les votes !"],
+["geo","Quel est le plus grand désert chaud du monde ?",["Le Kalahari","Le Gobi","L’Arabie","Le Sahara"],3,"Le Sahara est presque aussi grand que les États-Unis. Il y a 10 000 ans, il était vert, avec des lacs et des animaux."],
+["his","En quelle année l’être humain a-t-il marché sur la Lune pour la première fois ?",["1959","1965","1969","1975"],2,"C’était Apollo 11, en 1969. L’ordinateur de bord était bien moins puissant qu’une calculatrice d’aujourd’hui."],
+["his","En quelle année a commencé la Révolution française ?",["1689","1789","1815","1848"],1,"La prise de la Bastille, le 14 juillet 1789, est devenue la fête nationale française."],
+["his","Cléopâtre a vécu plus près de quel événement ?",["La construction de la Grande Pyramide","L’alunissage de 1969"],1,"La Grande Pyramide a été bâtie vers 2560 av. J.-C., Cléopâtre est morte en 30 av. J.-C. : plus de 2 500 ans les séparent, contre environ 2 000 ans avec l’alunissage."],
+["his","En quelle année la RDC est-elle devenue indépendante ?",["1958","1960","1962","1965"],1,"L’indépendance a été proclamée le 30 juin 1960, avec Patrice Lumumba comme premier ministre."],
+["his","Où ont eu lieu les premiers Jeux olympiques modernes, en 1896 ?",["Paris","Londres","Rome","Athènes"],3,"Athènes a accueilli les premiers Jeux modernes, en hommage à la Grèce antique où ils sont nés."],
+["sci","Quelle est la planète la plus chaude du système solaire ?",["Mercure","Vénus","Mars","Jupiter"],1,"Vénus atteint environ 465 °C, plus que Mercure pourtant plus proche du Soleil, à cause de son énorme effet de serre."],
+["sci","Combien d’os un adulte a-t-il ?",["106","206","306","406"],1,"Un bébé en a environ 300 : beaucoup se soudent en grandissant."],
+["sci","Quel est le symbole chimique de l’or ?",["Or","Ag","Au","Go"],2,"Au vient du latin « aurum », qui veut dire or."],
+["sci","Botaniquement, qu’est-ce qu’une banane ?",["Un fruit à coque","Une baie","Un légume","Une noix"],1,"La banane est une baie, alors que la fraise n’en est pas une. La botanique adore les surprises."],
+["sci","Quel aliment ne se périme (presque) jamais ?",["Le riz cuit","Le fromage","Le miel","Le pain"],2,"On a retrouvé dans des tombes égyptiennes du miel de 3 000 ans encore comestible."],
+["ani","Combien de cœurs possède une pieuvre ?",["1","2","3","8"],2,"Trois cœurs, et un sang bleu grâce au cuivre qu’il contient."],
+["ani","Quel est l’animal terrestre le plus rapide ?",["Le lion","Le guépard","L’autruche","Le cheval"],1,"Le guépard atteint plus de 100 km/h, mais seulement sur quelques centaines de mètres."],
+["ani","Le bonobo vit à l’état sauvage uniquement dans quel pays ?",["Le Kenya","L’Ouganda","Le Gabon","La RDC"],3,"Le bonobo partage environ 98,7 % de son ADN avec nous et vit uniquement au sud du fleuve Congo."],
+["ani","L’okapi, aux pattes rayées comme un zèbre, est le plus proche parent de quel animal ?",["Le zèbre","La girafe","Le cheval","L’antilope"],1,"L’okapi est la seule autre espèce de la famille des girafes, et il est endémique de la RDC."],
+["ani","Quel est le plus grand animal du monde ?",["L’éléphant d’Afrique","Le requin-baleine","La baleine bleue","Le calmar géant"],2,"Son cœur pèse environ 180 kg, et un bébé baleine bleue boit des centaines de litres de lait par jour."],
+["art","Qui a peint la Joconde ?",["Michel-Ange","Léonard de Vinci","Raphaël","Botticelli"],1,"Elle est exposée au Louvre. Elle n’a ni sourcils ni cils visibles, sans doute effacés avec le temps."],
+["art","Quelle langue a le plus de locuteurs natifs ?",["L’anglais","Le mandarin","L’espagnol","L’hindi"],1,"Le mandarin compte plus de 900 millions de locuteurs natifs. L’anglais gagne seulement si on compte ceux qui l’apprennent."],
+["art","En quelle année la rumba congolaise est-elle entrée au patrimoine de l’UNESCO ?",["2015","2018","2021","2023"],2,"Elle a été inscrite en 2021, un titre partagé entre la RDC et la République du Congo."],
+["art","Qui a écrit « Les Misérables » ?",["Émile Zola","Victor Hugo","Alexandre Dumas","Molière"],1,"Victor Hugo l’a publié en 1862, et le roman fait plus de 1 400 pages dans certaines éditions !"],
+["art","Quelle est la couleur de la « boîte noire » d’un avion ?",["Noire","Rouge","Orange","Jaune"],2,"Elle est orange vif pour être retrouvée plus facilement après un accident."],
+["fun","Qui a remporté la Coupe du monde de football 2022 ?",["La France","Le Brésil","L’Argentine","La Croatie"],2,"La finale s’est terminée 3-3, puis l’Argentine l’a emporté aux tirs au but, avec Lionel Messi."],
+["fun","Combien dure un match de basket NBA (sans prolongation) ?",["40 minutes","48 minutes","60 minutes","90 minutes"],1,"4 quarts de 12 minutes, mais avec les arrêts de jeu, un match dure plus de 2 heures."],
+["fun","Combien de joueurs une équipe de volley a-t-elle sur le terrain ?",["5","6","7","11"],1,"Six joueurs, qui tournent d’une position à l’autre à chaque service gagné."],
+["fun","Dans quel sport peut-on marquer un « ace » ?",["Le tennis","Le golf seulement","Le football","Le judo"],0,"Un ace est un service que l’adversaire ne touche pas. Il existe aussi au golf (trou en un), mais pas seulement !"]
+];
+var COL=["var(--c0)","var(--c1)","var(--c2)","var(--c3)"],TIME=15,LET="ABCD";
+var S={cat:"all"},app=document.getElementById("app"),tick=null;
+function load(){try{return +localStorage.getItem("qc-best")||0}catch(e){return 0}}
+function save(v){try{localStorage.setItem("qc-best",v)}catch(e){}}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+
+function home(){
+  clearInterval(tick);
+  var chips=Object.keys(CATS).map(function(k){return '<button type="button" class="chip" aria-pressed="'+(S.cat===k)+'" onclick="pick(\''+k+'\')">'+CATS[k][0]+' '+CATS[k][1]+'</button>'}).join("");
+  var b=load();
+  app.innerHTML='<h1>Quiz <span>Cerveau</span></h1><p class="lead">Dix questions, quinze secondes chacune, trois vies. Chaque réponse t’apprend une anecdote que tu pourras ressortir à table.</p><div class="cats">'+chips+'</div><button type="button" class="big" onclick="start()">Jouer</button><p class="best">'+(b?'🏆 Ton record : '+b+' points':'Pas encore de record. À toi de jouer !')+'</p>';
+}
+function pick(k){S.cat=k;home()}
+function start(){
+  var pool=Q.filter(function(q){return S.cat==="all"||q[0]===S.cat});
+  S.list=shuffle(pool).slice(0,10);S.i=0;S.lives=3;S.score=0;S.streak=0;S.ok=0;S.missed=[];
+  ask();
+}
+function ask(){
+  var q=S.list[S.i];
+  S.opts=shuffle(q[2].map(function(t,i){return{t:t,r:i===q[3]}}));
+  S.locked=false;S.t=TIME;
+  var hearts="";for(var h=0;h<3;h++)hearts+=h<S.lives?"❤️":"🖤";
+  app.innerHTML='<div class="top"><span aria-label="'+S.lives+' vies">'+hearts+'</span><span>'+(S.streak>1?'🔥 '+S.streak+' · ':'')+S.score+' pts</span><small>'+(S.i+1)+'/'+S.list.length+'</small></div>'
+  +'<div class="bar" role="progressbar" aria-label="Temps restant"><i id="bar"></i></div>'
+  +'<span class="tag">'+CATS[q[0]][0]+' '+CATS[q[0]][1]+'</span><h2 class="q">'+q[1]+'</h2>'
+  +'<div class="ans">'+S.opts.map(function(o,i){return '<button type="button" class="a" onclick="answer('+i+',this)"><b style="background:'+COL[i]+'">'+LET[i]+'</b>'+o.t+'</button>'}).join("")+'</div><div id="fb"></div>';
+  clearInterval(tick);
+  tick=setInterval(function(){
+    S.t-=.1;var bar=document.getElementById("bar");
+    if(bar){bar.style.width=Math.max(0,S.t/TIME*100)+"%";bar.className=S.t<5?"low":""}
+    if(S.t<=0){clearInterval(tick);answer(-1)}
+  },100);
+}
+function answer(i,el){
+  if(S.locked)return;S.locked=true;clearInterval(tick);
+  var q=S.list[S.i],good=i>=0&&S.opts[i].r,pts=0,head,right=S.opts.filter(function(o){return o.r})[0].t;
+  if(good){S.streak++;S.ok++;pts=100+Math.round(Math.max(0,S.t)*3)+(S.streak>1?(S.streak-1)*25:0);S.score+=pts;
+    head=["Bravo ! 🎉","Exact ! 🤩","Bien joué ! 💪","Tu gères ! 😎"][Math.floor(Math.random()*4)]+' +'+pts;
+    if(el)burst(el)}
+  else{S.streak=0;S.lives--;S.missed.push([q[1],right]);head=i<0?"Temps écoulé ⏰":"Raté… 😅"}
+  var btns=document.querySelectorAll(".a");
+  btns.forEach(function(b,k){b.disabled=true;if(S.opts[k].r)b.classList.add("right");else if(k===i)b.classList.add("wrong");else b.classList.add("dim")});
+  var last=S.lives<=0||S.i>=S.list.length-1;
+  document.getElementById("fb").innerHTML='<div class="fb"><h3>'+head+'</h3>'+(good?'':'<div>La bonne réponse : <strong>'+right+'</strong></div>')+'<p>💡 <strong>Le saviez-vous ?</strong> '+q[4]+'</p><button type="button" class="big next" id="nx" onclick="next()">'+(last?'Voir mon score':'Question suivante')+'</button></div>';
+  var nx=document.getElementById("nx");nx.focus({preventScroll:true});nx.scrollIntoView({block:"nearest",behavior:"smooth"});
+}
+function next(){
+  if(S.lives<=0||S.i>=S.list.length-1)return end();
+  S.i++;ask();window.scrollTo(0,0);
+}
+function end(){
+  var n=S.list.length,pct=S.ok/n,best=load(),rec=S.score>best;
+  if(rec)save(S.score);
+  var rank=pct>=.9?["🧠","Cerveau en feu"]:pct>=.7?["🎓","Encyclopédie vivante"]:pct>=.5?["🔍","Bon explorateur"]:["🌱","Apprenti curieux"];
+  var out=S.lives<=0?"Plus de vies, mais tu en sais déjà plus qu’au début !":"Tu es allé jusqu’au bout.";
+  app.innerHTML='<div style="text-align:center"><div style="font-size:64px">'+rank[0]+'</div><p class="rank">'+rank[1]+'</p><div class="score">'+S.score+'</div><div style="color:var(--mut);font-weight:700">points'+(rec?' · 🏆 nouveau record !':'')+'</div></div>'
+  +'<div class="stats"><div>'+S.ok+'/'+n+'<small>bonnes réponses</small></div><div>'+(n-S.ok)+'<small>à retenir</small></div></div><p class="lead">'+out+'</p>'
+  +(S.missed.length?'<h3 style="margin:0 0 8px">À retenir</h3><div class="miss">'+S.missed.map(function(m){return '<div>'+m[0]+'<br><em>'+m[1]+'</em></div>'}).join("")+'</div>':'')
+  +'<button type="button" class="big" onclick="start()">Rejouer</button><button type="button" class="big ghost" onclick="home()">Changer de thème</button>';
+  window.scrollTo(0,0);
+}
+function burst(el){
+  if(window.matchMedia("(prefers-reduced-motion:reduce)").matches||!el.animate)return;
+  var r=el.getBoundingClientRect(),E=["✨","🎉","⭐","🎊"];
+  for(var k=0;k<10;k++){
+    var s=document.createElement("span");s.className="pop";s.textContent=E[k%4];
+    s.style.left=(r.left+r.width/2)+"px";s.style.top=(r.top+r.height/2)+"px";document.body.appendChild(s);
+    var a=Math.random()*Math.PI*2,d=60+Math.random()*90;
+    s.animate([{transform:"translate(0,0) scale(.6)",opacity:1},{transform:"translate("+Math.cos(a)*d+"px,"+(Math.sin(a)*d-40)+"px) scale(1.2)",opacity:0}],{duration:800,easing:"ease-out"}).onfinish=(function(n){return function(){n.remove()}})(s);
+  }
+}
+home();
+</script>
+</body>
+</html>
